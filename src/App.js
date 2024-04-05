@@ -12,9 +12,12 @@ import Carpooling from "./pages/Carpooling";
 import Redeem from "./pages/Redeem";
 import Community from "./pages/Community";
 import Footer from "./components/Footer";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
+import Login from "./auth/Login";
+import Signup from "./auth/Signup";
 import Leaderboard from "./pages/Leaderboard";
+import GeneralState from "./context/GeneralState";
+import GiveRide from "./pages/GiveRide";
+import AskForRide from "./pages/AskForRide";
 
 // Custom component to control the visibility of Navbar and Footer
 function NavigationControl() {
@@ -29,6 +32,8 @@ function NavigationControl() {
         <Route path="/" element={<Home />} />
         <Route path="/route-recommendation" element={<RouteRecommend />} />
         <Route path="/car-pooling" element={<Carpooling />} />
+        <Route path="/car-pooling/giveride" element={<GiveRide />} />
+        <Route path="/car-pooling/askforride" element={<AskForRide />} />
         <Route path="/redeem" element={<Redeem />} />
         <Route path="/community" element={<Community />} />
         <Route path="/signup" element={<Signup />} />
@@ -42,9 +47,11 @@ function NavigationControl() {
 
 function App() {
   return (
-    <Router>
-      <NavigationControl />
-    </Router>
+    <GeneralState>
+      <Router>
+        <NavigationControl />
+      </Router>
+    </GeneralState>
   );
 }
 
