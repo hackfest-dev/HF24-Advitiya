@@ -2,7 +2,9 @@ import React from 'react'
 
 const RouteRecommend = () => {
   return (
-    <div>RouteRecommend</div>
+    <div>
+      
+    </div>
   )
 }
 
