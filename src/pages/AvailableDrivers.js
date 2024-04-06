@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import passenger from "../assets/passenger.jpg";
 import { useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 
 const AskForRide = () => {
   const host = "http://localhost:5000";
@@ -33,6 +34,7 @@ const AskForRide = () => {
         // Update requestedDrivers state to include the driverId
         setRequestedDrivers([...requestedDrivers, driverId]);
         console.log("Ride request sent successfully", response);
+        toast.success("Ride request sent successfully");
       } else {
         console.error("Error sending ride request:", response.statusText);
       }
