@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fetchuser = require("../middleware/fetchUser");
 const { body, validationResult } = require("express-validator");
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -11,7 +12,7 @@ router.post(
   "/signup",
   [
     body("email", "Enter a valid Email").isEmail(),
-    body("city", "Select a city").exists(),
+    // body("city", "Select a city").exists(),
     body("name", "Enter a valid name").isLength({ min: 3 }),
     body("password", "Enter a valid password").isLength({ min: 8 }),
   ],
@@ -32,18 +33,26 @@ router.post(
         const secPass = await bcrypt.hash(req.body.password, salt);
         user = await User.create({
           name: req.body.name,
-          city: req.body.city,
+          // city: req.body.city,
           password: secPass,
           email: req.body.email,
         });
         const data = {
           user: {
             id: user.id,
+            // name: user.name,
+            // city: user.city
           },
         };
         success = true;
         const authToken = jwt.sign(data, JWT_SECRET);
-        res.json({ authToken, success });
+        res.json({
+          authToken,
+          success,
+          name: user.name,
+          id: user.id,
+          // city: user.city,
+        });
       }
     } catch (error) {
       console.error(error.message);
@@ -84,12 +93,18 @@ router.post(
         const data = {
           user: {
             id: user.id,
-            name: user.name,
+            // name: user.name,
           },
         };
         const authToken = jwt.sign(data, JWT_SECRET);
         success = true;
-        res.json({ success, authToken, name: user.name });
+        res.json({
+          authToken,
+          success,
+          name: user.name,
+          id: user.id,
+          // city: user.city,
+        });
       }
     } catch (error) {
       console.error(error.message);

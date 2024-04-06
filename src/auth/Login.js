@@ -4,13 +4,13 @@ import { useNavigate } from "react-router-dom";
 import GeneralContext from "../context/GeneralContext";
 import { auth, provider } from "./config";
 import { signInWithPopup } from "firebase/auth";
+import toast from "react-hot-toast";
 
 const colors = {
   primary: "#9BCF53",
   background: "#BFEA7C",
   disabled: "#D9D9D9",
 };
-
 const Login = () => {
   const context = useContext(GeneralContext);
   const { getLeaderboardData } = context;
@@ -38,10 +38,10 @@ const Login = () => {
       const userCoins = userEntry.coins;
       localStorage.setItem("coins", userCoins);
       console.log(localStorage.getItem("coins"));
-      console.log("Successfully logged In:");
+      toast.success(`Welcome ${json.name}`);
       navigate("/");
     } else {
-      console.log("Invalid credentials");
+      toast.error(`${json.error}`);
     }
   };
   const handleSubmit = async (e) => {
@@ -180,32 +180,7 @@ const Login = () => {
                       <span className="px-2 bg-gray-100 text-gray-500">Or</span>
                     </div>
                   </div>
-
-                  <div className="mt-6 grid grid-cols-3 gap-3">
-                    <div>
-                      <a
-                        href="#"
-                        className="w-full flex items-center justify-center px-8 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-                      >
-                        <img
-                          className="h-5 w-5"
-                          src="https://www.svgrepo.com/show/512120/facebook-176.svg"
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                    <div>
-                      <a
-                        href="#"
-                        className="w-full flex items-center justify-center px-8 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
-                      >
-                        <img
-                          className="h-5 w-5"
-                          src="https://www.svgrepo.com/show/513008/twitter-154.svg"
-                          alt=""
-                        />
-                      </a>
-                    </div>
+                  <div className="mt-6 grid grid-cols-1 gap-3">
                     <div>
                       <a
                         href="#"
@@ -217,6 +192,7 @@ const Login = () => {
                           src="https://www.svgrepo.com/show/506498/google.svg"
                           alt=""
                         />
+                        <span className="ml-2">Sign in with Google</span>
                       </a>
                     </div>
                   </div>

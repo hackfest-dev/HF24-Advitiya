@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo.png";
 import GeneralContext from "../context/GeneralContext";
@@ -35,7 +36,7 @@ const Signup = () => {
     });
     const json = await response.json();
     console.log(json);
-    if (json.success) {
+    if (json.success === true) {
       //save the auth token and redirect
       localStorage.setItem("token", json.authToken);
       localStorage.setItem("name", json.name);
@@ -56,8 +57,9 @@ const Signup = () => {
       console.log(localStorage.getItem("coins"));
       console.log("Successfully Signed In:");
       navigate("/");
+      toast.success(`Welcome ${json.name}, You have earned 15 EcoCoins`);
     } else {
-      console.log("Invalid Credentials");
+      toast.error(json.error);
     }
   };
 
@@ -87,6 +89,7 @@ const Signup = () => {
         password,
       };
       await SignIn(payload);
+      toast.success(`Welcome ${name}, You have earned 15 EcoCoins`);
     });
   };
   // useEffect(() => {
@@ -342,6 +345,7 @@ const Signup = () => {
                       src="https://www.svgrepo.com/show/506498/google.svg"
                       alt=""
                     />
+                    <span className="ml-2">Sign in with Google</span>
                   </a>
                 </div>
               </div>

@@ -37,7 +37,7 @@ const Redeem = () => {
           <h2 className="text-2xl text-custom-green font-bold mb-4">
             Welcome, {localStorage.getItem("name")}!
           </h2>
-          <p className="text-lg mb-4">Eco-Coins Available: {currentCoins}</p>
+          <p className="text-lg mb-4">Eco-Coins Available : {currentCoins}</p>
         </>
       ) : (
         <h2 className="text-2xl text-custom-green font-bold mb-4">
