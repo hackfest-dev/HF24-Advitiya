@@ -1,5 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import GeneralContext from "../context/GeneralContext";
+import toast from "react-hot-toast";
 import {
   useJsApiLoader,
   GoogleMap,
@@ -13,6 +15,8 @@ const center = { lat: 12.9716, lng: 77.5946 };
 
 const Requests = () => {
   const navigate = useNavigate();
+  const context = useContext(GeneralContext);
+  const { setLeaderboardData } = context;
   const location = useLocation();
   const host = "http://localhost:5000";
   const [rideRequests, setRideRequests] = useState([]);
@@ -21,6 +25,7 @@ const Requests = () => {
   const [directions, setDirections] = useState(null);
   const [distance, setDistance] = useState("");
   const [duration, setDuration] = useState("");
+  const [carbon, setCarbon] = useState(null);
   const vehicle = location.state?.vehicle;
 
   const calcCarbon = async (vehicle, distance) => {
@@ -43,8 +48,52 @@ const Requests = () => {
 
     try {
       const response = await fetch(url, options);
-      const result = await response.text();
-      console.log(result);
+      const resultText = await response.text();
+      const responseData = JSON.parse(resultText);
+      const co2eGrams = responseData.data.co2e_gm;
+      console.log(co2eGrams);
+      const avgEmission = co2eGrams / distance;
+      if (avgEmission <= 100) {
+        const temp = await setLeaderboardData(
+          localStorage.getItem("name"),
+          100
+        );
+        const updatedData = await temp.find(
+          (entry) => entry.user === localStorage.getItem("id")
+        );
+        const userCoins = updatedData.coins;
+        localStorage.setItem("coins", userCoins);
+        toast.success(
+          `Earned 100 EcoCoins!, ${co2eGrams} grams carbon emitted`
+        );
+      } else if (avgEmission > 100 && avgEmission < 160) {
+        const temp = await setLeaderboardData(localStorage.getItem("name"), 50);
+        const updatedData = await temp.find(
+          (entry) => entry.user === localStorage.getItem("id")
+        );
+        const userCoins = updatedData.coins;
+        localStorage.setItem("coins", userCoins);
+        toast.success(`Earned 50 EcoCoins!, ${co2eGrams} grams carbon emitted`);
+      } else if (avgEmission >= 160 && avgEmission <= 255) {
+        const temp = await setLeaderboardData(localStorage.getItem("name"), 20);
+        const updatedData = await temp.find(
+          (entry) => entry.user === localStorage.getItem("id")
+        );
+        const userCoins = updatedData.coins;
+        localStorage.setItem("coins", userCoins);
+        toast.success(`Earned 20 EcoCoins!, ${co2eGrams} grams carbon emitted`);
+      } else {
+        const temp = await setLeaderboardData(
+          localStorage.getItem("name"),
+          -10
+        );
+        const updatedData = await temp.find(
+          (entry) => entry.user === localStorage.getItem("id")
+        );
+        const userCoins = updatedData.coins;
+        localStorage.setItem("coins", userCoins);
+        toast.success(`Earned 10 EcoCoins!, ${co2eGrams} grams carbon emitted`);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -102,8 +151,11 @@ const Requests = () => {
     }
   }, [rideRequests, isLoaded]);
 
-  const handleTripButton = () => {
-    navigate("/endtrip");
+  const handleTripButton = async () => {
+    const numericValue = distance.replace(/[^\d.]/g, "");
+    const numericDistance = parseFloat(numericValue);
+    await calcCarbon(vehicle, numericDistance);
+    navigate("/car-pooling");
   };
 
   return (

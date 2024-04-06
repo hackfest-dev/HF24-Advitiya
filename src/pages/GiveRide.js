@@ -113,7 +113,7 @@ const GiveRide = () => {
   useEffect(() => {
     if (driverId) {
       navigate("/requests", {
-        state: { driverId },
+        state: { driverId, vehicle },
       });
     }
   }, [driverId, navigate]);
