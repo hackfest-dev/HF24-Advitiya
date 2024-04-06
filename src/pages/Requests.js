@@ -167,11 +167,29 @@ const Requests = () => {
         {error && <p className="text-red-600 mb-4">{error}</p>}
         {rideRequests.length > 0 ? (
           <ul>
-            {rideRequests.map((request) => (
-              <li key={request._id}>
-                Source: {request.source}, Destination: {request.destination}
-              </li>
-            ))}
+          {rideRequests.map((request) => (
+  <div key={request._id} className="flex items-center justify-between mb-4">
+    <div>
+      <p>Source: {request.source}</p>
+      <p>Destination: {request.destination}</p>
+    </div>
+    <div>
+      <button
+        className="px-4 py-2 bg-green-500 text-white rounded-lg mr-2"
+        // onClick={() => handleAcceptRequest(request._id)}
+      >
+        Accept
+      </button>
+      <button
+        className="px-4 py-2 bg-red-500 text-white rounded-lg"
+        // onClick={() => handleDeclineRequest(request._id)}
+      >
+        Decline
+      </button>
+    </div>
+  </div>
+))}
+
           </ul>
         ) : (
           <p>No ride requests</p>
